@@ -1,17 +1,42 @@
-with open("src/day1_input.txt", "r") as f:
-    measures = [line.rstrip('\n') for line in f]
+with open("src/day2_input.txt", "r") as f:
+    data = [line.rstrip('\n') for line in f]
 
-measures = [int(measure) for measure in measures]
-real_measures = [sum(measures[rep:rep+3]) for rep in range(len(measures)-2)]
+forward = 0
+deep = 0
 
-print(len(measures))
-print(len(real_measures))
-print(measures[0])
-print(real_measures[0])
+# part#1
+for instruction in data:
+    single_data = instruction.split()
+    if single_data[0] == 'up':
+        decrease = -int((single_data[1]))
+        deep += decrease
+    elif single_data[0] == 'down':
+        increase = int(single_data[1])
+        deep += increase
+    elif single_data[0] == 'forward':
+        increase = int(single_data[1])
+        forward += increase
+        
+print(forward * deep)
 
-larger_meassurement = 0
-for measurement in range(len(real_measures)-1):
-    if int(real_measures[measurement+1]) > int(real_measures[measurement]):
-        larger_meassurement += 1
+# part#2
+forward = 0
+deep = 0
+aim = 0
 
-print(larger_meassurement)
+for instruction in data:
+    single_data = instruction.split()
+    if single_data[0] == 'up':
+        decrease = -int((single_data[1]))
+        aim += decrease
+    elif single_data[0] == 'down':
+        increase = int(single_data[1])
+        aim += increase
+    elif single_data[0] == 'forward':
+        increase = int(single_data[1])
+        forward += increase
+        deep += aim * increase
+
+print(forward * deep)
+
+
