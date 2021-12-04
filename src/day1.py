@@ -1,21 +1,27 @@
-with open("src/day1_input.txt", "r") as f:
+"""
+ADVENT OF CODE DAY 1 - DONAR SWEEP
+Full description: https://adventofcode.com/2021/day/1
+"""
+
+# reading input data for the exercise
+with open("src/inputs/day1_input.txt", "r") as f:
     content = [line.rstrip('\n') for line in f]
     
-# part#1
+# PART I.
 larger_meassurement = 0
 for measurement in range(len(content)-1):
     if int(content[measurement+1]) > int(content[measurement]):
         larger_meassurement += 1
 
-print(larger_meassurement)
+print(f"DONE! {larger_meassurement} are larger!")
 
-# part#2
+# PART II.
 measures = [int(measure) for measure in content]
 real_measures = [sum(measures[rep:rep+3]) for rep in range(len(measures)-2)]
 
-larger_meassurement = 0
+precise_larger_meassurement = 0
 for measurement in range(len(real_measures)-1):
     if int(real_measures[measurement+1]) > int(real_measures[measurement]):
-        larger_meassurement += 1
+        precise_larger_meassurement += 1
 
-print(larger_meassurement)
+print(f"DONE! {precise_larger_meassurement} are actully larger!")
