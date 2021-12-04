@@ -88,21 +88,20 @@ def work_with_winning_board(board, draw_number):
     """In case the board wins, following action take place: announce win if it is first, delete from boards list and announce win if it is last"""
     global first_winning_board
     global last_winning_board
+    index_of_current_board = boards.index(board)
 
     if not first_winning_board:
         make_final_score(board, draw_number)
         first_winning_board = True
     # once the board is winning board, it can be deleted from list of boards
     if len(boards) > 1:
-        index_of_current_board = boards.index(board)
         delete_board_from_boards(index_of_current_board)
-    else:
-         last_winning_board = True
-         make_final_score(board, draw_number)
+    if len(boards) == 1: # I have absolutely no clue why else statement is not working but straight coparison is
+        last_winning_board = True
+        make_final_score(board, draw_number)
+        delete_board_from_boards(index_of_current_board)
 
-
-# PART I. + II.
-for draw_number in drawing_numbers:
+def verify_draw_number_against_boards(draw_number, boards):
     for board in boards:
         for row in board:
             for number in row:
@@ -115,6 +114,10 @@ for draw_number in drawing_numbers:
                 break
         if last_winning_board:
             break
-    if last_winning_board:
-        break
 
+# PART I. + II.
+for draw_number in drawing_numbers:
+    verify_draw_number_against_boards(draw_number, boards)
+
+
+    
