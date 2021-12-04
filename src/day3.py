@@ -4,7 +4,7 @@ Full description: https://adventofcode.com/2021/day/3
 """
 
 # reading input data for the exercise
-with open("src/day3_input.txt", "r") as f:
+with open("src/inputs/day3_input.txt", "r") as f:
     data = [line.rstrip('\n') for line in f]
 
 # GENERAL FUNCTIONS
