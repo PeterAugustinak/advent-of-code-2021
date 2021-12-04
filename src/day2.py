@@ -1,10 +1,16 @@
-with open("src/day2_input.txt", "r") as f:
+"""
+ADVENT OF CODE DAY 2 - DIVE!
+Full description: https://adventofcode.com/2021/day/2
+"""
+
+# reading input data for the exercise
+with open("src/inputs/day2_input.txt", "r") as f:
     data = [line.rstrip('\n') for line in f]
 
 forward = 0
 deep = 0
 
-# part#1
+# PART I.
 for instruction in data:
     single_data = instruction.split()
     if single_data[0] == 'up':
@@ -16,10 +22,11 @@ for instruction in data:
     elif single_data[0] == 'forward':
         increase = int(single_data[1])
         forward += increase
-        
-print(forward * deep)
+    
+final_depth = forward * deep
+print(f"DONE! Final depth is {final_depth}!")
 
-# part#2
+# PART II.
 forward = 0
 deep = 0
 aim = 0
@@ -37,6 +44,5 @@ for instruction in data:
         forward += increase
         deep += aim * increase
 
-print(forward * deep)
-
-
+real_final_depth = forward * deep
+print(f"DONE! Real final depth is {real_final_depth}!")
