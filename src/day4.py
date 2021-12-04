@@ -7,40 +7,54 @@ Full description: https://adventofcode.com/2021/day/4
 with open("src/inputs/day4_input.txt", "r") as f:
     data = [line.rstrip('\n') for line in f]
 
-drawing_numbers = [number for number in data[0].split(",")]
+# general functions
+def create_boards(boards_data):
+    """Raw input of board data is serialized and returns formated boards (row = list) in boards list"""
+    boards = []
+    board = []
 
+    for elem in boards_data:
+        row = elem.split()
+        if len(row) > 1:
+            board.append(row)
+            if elem == boards_data[-1]:
+                boards.append(board)
+        else:
+            if board:
+                boards.append(board)
+                board =[]
+    return boards
+
+drawing_numbers = [number for number in data[0].split(",")]
 boards_raw = data[1:]
-boards = []
-board = []
-for string in boards_raw:
-    if len(string) > 1:
-        board.append(string.split())
-    else:
-        boards.append(board)
-        board = []
+boards = create_boards(boards_raw)
 
 def show_board(board):
-        for row in board:
-            print(row)
+    """Shows board in formated output"""
+    print()
+    for row in board:
+        print(row)
 
-win_board = None
+first_winning_board = False
+last_winning_board = False
 
 def winning_board(board):
-    global win_board
+    """Checks particular board for win - if at least one row or one col is full of X, returns True"""
     win_row = check_rows(board)
     win_col = check_cols(board)
     if win_row or win_col:
-        win_board = True
         return True
     return False
 
 def check_rows(board):
+    """Check all rows for particular board and returns True if at least one row is full of X"""
     for row in board:
         if len(set(row)) == 1:
             return True
     return False
 
 def check_cols(board):
+    """Checks all columns in specific row and returns True if at least one columnn is full of X"""
     for i in range(len(board[0])):
         column = []
         for row in board:
@@ -50,6 +64,8 @@ def check_cols(board):
     return False
 
 def make_final_score(board, draw_number):
+    """Count final score and based on first or last announce win"""
+    global last_winning_board
     total = 0
     for row in board:
         for number in row:
@@ -57,14 +73,35 @@ def make_final_score(board, draw_number):
                 total += int(number)
             except ValueError:
                 pass
-    
-    print(draw_number)
-    print(total)
+        
+    position = "FIRST" if not last_winning_board else "LAST"
     full_score = total * int(draw_number)
-    print("The winning board here!!!")
+    print(f"\nThe {position} winning board won by number {draw_number}!!!")
     show_board(board)
     print(f"The full score is: {full_score}")
 
+def delete_board_from_boards(index_of_current_board):
+    """Deletes boards from the boards list"""
+    del boards[index_of_current_board]
+
+def work_with_winning_board(board, draw_number):
+    """In case the board wins, following action take place: announce win if it is first, delete from boards list and announce win if it is last"""
+    global first_winning_board
+    global last_winning_board
+
+    if not first_winning_board:
+        make_final_score(board, draw_number)
+        first_winning_board = True
+    # once the board is winning board, it can be deleted from list of boards
+    if len(boards) > 1:
+        index_of_current_board = boards.index(board)
+        delete_board_from_boards(index_of_current_board)
+    else:
+         last_winning_board = True
+         make_final_score(board, draw_number)
+
+
+# PART I. + II.
 for draw_number in drawing_numbers:
     for board in boards:
         for row in board:
@@ -73,9 +110,11 @@ for draw_number in drawing_numbers:
                     ind = row.index(number)
                     row[ind] = 'X'
                     if winning_board(board):
-                        make_final_score(board, draw_number)
-                        break
-            if win_board:
+                        work_with_winning_board(board, draw_number)
+            if last_winning_board:
                 break
-        if win_board:
+        if last_winning_board:
             break
+    if last_winning_board:
+        break
+
