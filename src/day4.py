@@ -102,6 +102,7 @@ def work_with_winning_board(board, draw_number):
         delete_board_from_boards(index_of_current_board)
 
 def verify_draw_number_against_boards(draw_number, boards):
+    """Takes current draw number and verify it against all remaining boards. If the number means winning number for the boards, winning board handler take place"""
     for board in boards:
         for row in board:
             for number in row:
@@ -118,6 +119,4 @@ def verify_draw_number_against_boards(draw_number, boards):
 # PART I. + II.
 for draw_number in drawing_numbers:
     verify_draw_number_against_boards(draw_number, boards)
-
-
     
