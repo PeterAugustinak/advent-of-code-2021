@@ -45,7 +45,6 @@ position_map_diagonal = {}
 
 def update_occupied_places_direct(coordinate):
     """Draw line between two places and add 1 point for every coordinate of the line to position map (as occupied place)"""
-    global position_map_direct
 
     val1, val2, point, mark = resolve_direct_coordinate_values(coordinate)
     min_val = min(val1, val2)
@@ -59,7 +58,7 @@ def update_occupied_places_direct(coordinate):
             position_map_direct[occupated_coordinates] += 1
         except KeyError:
             position_map_direct[occupated_coordinates] = 1
-
+  
 def resolve_direct_coordinate_values(coordinate):
     """Determines if the line is horizontal (x) or vertical (y) and based on that call function to 'draw line' between two positions"""
     if coordinate['x1'] == coordinate['x2']:
@@ -74,7 +73,7 @@ def resolve_direct_coordinate_values(coordinate):
 
 def update_occupied_places_diagonal(coordinate):
     """Draw line between two places diagonally and add 1 point for every coordinate of the line to position map (as occupied place)"""
-    global position_map_diagonal
+
     min_x = min(coordinate['x1'], coordinate['x2'])
     max_x = max(coordinate['x1'], coordinate['x2'])
     min_y = min(coordinate['y1'], coordinate['y2'])
@@ -113,21 +112,23 @@ for coordinate in filtered_coordinates_diagonal.values():
 count_of_overlapped_places_diagonal = find_number_of_overlapped_places(position_map_diagonal)
 print(f"Number of overlapped places by diagonal lines only: {count_of_overlapped_places_diagonal}")
 
-# count all overlapped occupied places by merging both maps
-position_map_total = {}
+## count all overlapped occupied places by merging both maps
+# position_map_total = {}
 
-for key, value in position_map_direct.items():
-    try:
-        position_map_total[key] += 1
-    except KeyError:
-        position_map_total[key] = 1
+# for key, value in position_map_direct.items():
+#     try:
+#         position_map_total[key] += value
+#     except KeyError:
+#         position_map_total[key] = 1
 
-for key, value in position_map_diagonal.items():
-    try:
-        position_map_total[key] += 1
-    except KeyError:
-        position_map_total[key] = 1
+# for key, value in position_map_diagonal.items():
+#     try:
+#         position_map_total[key] += value
+#     except KeyError:
+#         position_map_total[key] = 1
+# count_of_overlapped_places_total = find_number_of_overlapped_places(position_map_total)
+# count_of_overlapped_places_total = find_number_of_overlapped_places(position_map_total)
 
-count_of_overlapped_places_total = find_number_of_overlapped_places(position_map_total)
+count_of_overlapped_places_total = len(position_map_direct.keys() & position_map_diagonal.keys())
 print(f"PART II. Number of overlapped places TOTAL: {count_of_overlapped_places_total}")
 
