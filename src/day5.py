@@ -29,20 +29,38 @@ def show_coordinates(coordinates_dict):
     for coor_num, coor_data in coordinates_dict.items():
         print(f"{coor_num}: {coor_data}")
 
-def filter_coordinates_dict_to_hor_ver_only(coordinates_dict):
+def filter_coordinates(coordinates_dict):
     """Filter only coordinates where either x1 == x2 or y1 == y2"""
-    filtered_coordinates = {}
+    filtered_coordinates_direct = {}
+    filtered_coordinates_diagonal = {}
     for name, data in coordinates_dict.items():
         if (data['x1'] == data['x2']) or (data['y1'] == data['y2']):
-            filtered_coordinates[name] = data
-    return filtered_coordinates
+            filtered_coordinates_direct[name] = data
+        else:
+            filtered_coordinates_diagonal[name] = data
+    return filtered_coordinates_direct, filtered_coordinates_diagonal
 
-def traverse_coordinates(coordinates):
-    """Traverse through all coordinates and send every coordinate to fill occupied places"""
-    for coordinate in coordinates.values():
-        fill_occupied_places_based_on_coordinate(coordinate)
+position_map_direct = {}
+position_map_diagonal = {}
 
-def fill_occupied_places_based_on_coordinate(coordinate):
+def update_occupied_places_direct(coordinate):
+    """Draw line between two places and add 1 point for every coordinate of the line to position map (as occupied place)"""
+    global position_map_direct
+
+    val1, val2, point, mark = resolve_direct_coordinate_values(coordinate)
+    min_val = min(val1, val2)
+    max_val = max(val1, val2)
+    for val in range(min_val, max_val + 1):
+        if mark == 'x':
+            occupated_coordinates = f"{point}-{val}"
+        elif mark == 'y':
+            occupated_coordinates = f"{val}-{point}"
+        try:
+            position_map_direct[occupated_coordinates] += 1
+        except KeyError:
+            position_map_direct[occupated_coordinates] = 1
+
+def resolve_direct_coordinate_values(coordinate):
     """Determines if the line is horizontal (x) or vertical (y) and based on that call function to 'draw line' between two positions"""
     if coordinate['x1'] == coordinate['x2']:
         point = coordinate['x1']
@@ -52,41 +70,64 @@ def fill_occupied_places_based_on_coordinate(coordinate):
         point = coordinate['y1']
         val1, val2 = coordinate['x1'], coordinate['x2']
         mark = 'y'
-    update_occupied_places(val1, val2, point, mark)
+    return val1, val2, point, mark
 
-position_map = {}
+def update_occupied_places_diagonal(coordinate):
+    """Draw line between two places diagonally and add 1 point for every coordinate of the line to position map (as occupied place)"""
+    global position_map_diagonal
+    min_x = min(coordinate['x1'], coordinate['x2'])
+    max_x = max(coordinate['x1'], coordinate['x2'])
+    min_y = min(coordinate['y1'], coordinate['y2'])
+    max_y = max(coordinate['y1'], coordinate['y2'])
 
-def update_occupied_places(val1, val2, point, mark):
-    """Draw line between two places and add 1 point for every coordinate of the line to position map (as occupied place)"""
-    global position_map
-    min_val = min(val1, val2)
-    max_val = max(val1, val2)
-    for val in range(min_val, max_val + 1):
-        if mark == 'x':
-            occupated_coordinates = f"{point}-{val}"
-        elif mark == 'y':
-            occupated_coordinates = f"{val}-{point}"
+    for x, y in zip(range(min_x, max_x + 1), range(min_y, max_y + 1)):
+        occupated_coordinates = f"{x}-{y}"
         try:
-            position_map[occupated_coordinates] += 1
+            position_map_diagonal[occupated_coordinates] += 1
         except KeyError:
-            position_map[occupated_coordinates] = 1
+            position_map_diagonal[occupated_coordinates] = 1
  
 def find_number_of_overlapped_places(position_map):
     """Check every occupied place in map and if place has value > 1 - means place is overlapped by more coordinates, adds 1 to counter"""
     number_of_overlapped_places = 0
+
     for value in position_map.values():
         if value > 1:
             number_of_overlapped_places += 1
+
     return number_of_overlapped_places
 
-# PART I.
 all_coordinates = create_coordinates_dictionary(data)
-filtered_coordinates = filter_coordinates_dict_to_hor_ver_only(all_coordinates)
-# fill position map
-traverse_coordinates(filtered_coordinates)
-count_of_overlapped_places = find_number_of_overlapped_places(position_map)
-print(f"PART I. Number of overlapped places: {count_of_overlapped_places}")
+filtered_coordinates_direct, filtered_coordinates_diagonal = filter_coordinates(all_coordinates)
 
+# # PART I.
+for coordinate in filtered_coordinates_direct.values():
+    update_occupied_places_direct(coordinate)
+count_of_overlapped_places_direct = find_number_of_overlapped_places(position_map_direct)
+print(f"PART I. Number of overlapped places by horizontal/vertical lines only: {count_of_overlapped_places_direct}")
 
+# PART II.
+for coordinate in filtered_coordinates_diagonal.values():
+    update_occupied_places_diagonal(coordinate)
 
+count_of_overlapped_places_diagonal = find_number_of_overlapped_places(position_map_diagonal)
+print(f"Number of overlapped places by diagonal lines only: {count_of_overlapped_places_diagonal}")
+
+# count all overlapped occupied places by merging both maps
+position_map_total = {}
+
+for key, value in position_map_direct.items():
+    try:
+        position_map_total[key] += 1
+    except KeyError:
+        position_map_total[key] = 1
+
+for key, value in position_map_diagonal.items():
+    try:
+        position_map_total[key] += 1
+    except KeyError:
+        position_map_total[key] = 1
+
+count_of_overlapped_places_total = find_number_of_overlapped_places(position_map_total)
+print(f"PART II. Number of overlapped places TOTAL: {count_of_overlapped_places_total}")
 
