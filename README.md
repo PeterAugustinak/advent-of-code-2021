@@ -8,4 +8,4 @@ All the exercises are done in Python 3.10
 - Day 3: Binary diagnostics
 - Day 4: Giant Squid
 - Day 5: Hydrothermal Venture
-
+- Day 6: Lanternfish (Part II. not resolved for MemoryError)
