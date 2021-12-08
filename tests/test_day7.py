@@ -29,18 +29,18 @@ def test_count_to_desired_position():
 
 # FACTOR
 def test_count_factor():
-     result = count_factor(0, 2)
+     result = count_factor(2)
      assert 3 == result
 
-     result = count_factor(0, 3)
+     result = count_factor(3)
      assert 6 == result
 
-     result = count_factor(0, 4)
+     result = count_factor(4)
      assert 10 == result
 
-     result = count_factor(0, 500)
+     result = count_factor(500)
      assert 125250 == result
 
-     result = count_factor(0, 1930)
+     result = count_factor(1930)
      assert 1863415 == result
     
