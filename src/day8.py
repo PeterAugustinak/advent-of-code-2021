@@ -14,7 +14,28 @@ def parse(day):
 def part1(data):
     """Solve part 1"""
     shifre = parse_digits_and_shifre(data)[1]
-    return decode_digits(shifre)
+    
+    counter = 0
+    for part in shifre:
+        for digit in part:
+            counter += decode_digits(digit)[0]
+    return counter
+
+
+def part2(data):
+    """Solve part 2"""
+    shifre = parse_digits_and_shifre(data)[1]
+
+    digit_lst = []
+    for part in shifre:
+        line_digit = ''
+        for digit in part:
+            line_digit += decode_digits(digit)[1]
+            line_digit += decode_complicated_digits(digit)
+        digit_lst.append(line_digit)
+
+    total = sum(int(num) for num in digit_lst if num)
+    return total
 
 
 def parse_digits_and_shifre(data):
@@ -28,20 +49,52 @@ def parse_digits_and_shifre(data):
     return digits, shifre
 
 
-def decode_digits(shifre):
+def decode_digits(entry):
     counter = 0
-    for part in shifre:
-        for digit in part:
-            real_digit = len(set(digit))
-            if real_digit == 2 or real_digit == 4 or real_digit == 7 or real_digit == 3:
-                counter += 1
+    string = ''
 
-    return counter
+    real_digit = len(set(entry))
 
+    if real_digit == 2:
+        string += '1'
+        counter += 1
+    elif real_digit == 3:
+        string += '7'
+        counter += 1
+    elif real_digit == 4:
+        string += '4'
+        counter += 1
+    elif real_digit == 7:
+        string += '8'
+        counter += 1
 
-def part2(data):
-    """Solve part 2"""
-    pass
+    return counter, string
+
+def decode_complicated_digits(entry):
+    entry = sorted(entry)
+    string =''
+    two = 'dafgc'
+    three = 'dafbc'
+    five = 'defbc'
+    six = 'defbcg'
+    nine = 'defabc'
+    zero = 'dabcge'
+
+    if entry == sorted(two):
+        string += '2'
+    if entry == sorted(three):
+        string += '3'
+    if entry == sorted(five):
+        string += '5'
+    if entry == sorted(six):
+        string += '6'
+    if entry == sorted(nine):
+        string += '9'
+    if entry == sorted(zero):
+        string += '0'
+
+    return string
+
 
 def solve(day):
     """Solve the puzzle for the given input"""
