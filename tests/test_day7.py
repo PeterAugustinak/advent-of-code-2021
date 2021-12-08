@@ -43,3 +43,4 @@ def test_count_factor():
 
      result = count_factor(0, 1930)
      assert 1863415 == result
+    
