@@ -24,19 +24,64 @@ def part1(data):
 
 def part2(data):
     """Solve part 2"""
-    shifre = parse_digits_and_shifre(data)[1]
+    digits = parse_digits_and_shifre(data)[0]
+    line_shifre_lst = []
+    for line in digits:
+        line_shifre = {}
+        for digit in line:
+            line_shifre.update(decode_digits(digit)[2])
+        line_shifre_lst.append(line_shifre)
 
-    digit_lst = []
-    for part in shifre:
-        line_digit = ''
-        for digit in part:
-            line_digit += decode_digits(digit)[1]
-            line_digit += decode_complicated_digits(digit)
-        digit_lst.append(line_digit)
 
-    total = sum(int(num) for num in digit_lst if num)
-    return total
+    translated_digit_lst = []
+    lines_to_translate = parse_digits_and_shifre(data)[1]
+    for shifre, line in zip(line_shifre_lst, lines_to_translate):
+        line_digit = translate_digit(shifre, line)
+        translated_digit_lst.append(line_digit)
+    
+    return sum(int(number) for number in translated_digit_lst if number)
 
+
+def translate_digit(shifre, line):
+
+    two = f"{shifre['upper']}{shifre['right_upper']}{shifre['middle']}{shifre['left_lower']}{shifre['lower']}"
+    three = f"{shifre['upper']}{shifre['right_upper']}{shifre['middle']}{shifre['right_lower']}{shifre['lower']}"
+    five = f"{shifre['upper']}{shifre['left_upper']}{shifre['middle']}{shifre['right_lower']}{shifre['lower']}"
+    six = f"{shifre['upper']}{shifre['left_upper']}{shifre['middle']}{shifre['left_lower']}{shifre['lower']}{shifre['right_lower']}"
+    nine = f"{shifre['upper']}{shifre['left_upper']}{shifre['middle']}{shifre['left_upper']}{shifre['lower']}{shifre['right_lower']}" 
+    zero = f"{shifre['upper']}{shifre['left_upper']}{shifre['left_lower']}{shifre['lower']}{shifre['right_lower']}"
+
+    string = '' # total digit for the current line
+    
+    # print(f"Shifre: {shifre}")
+    for digit in line:
+        # print(f"Line: {digit}")
+        entry_sorted = sorted(digit)
+        real_digit = len(digit)
+
+        if entry_sorted == sorted(two):
+            string += '2'
+        if entry_sorted == sorted(three):
+            string += '3'
+        if entry_sorted == sorted(five):
+            string += '5'
+        if entry_sorted == sorted(six):
+            string += '6'
+        if entry_sorted == sorted(nine):
+            string += '9'
+        if entry_sorted == sorted(zero):
+            string += '0'
+        if real_digit == 2:
+            string += '1'
+        elif real_digit == 3:
+            string += '7'
+        elif real_digit == 4:
+            string += '4'
+        elif real_digit == 7:
+            string += '8'
+    
+    return string
+    
 
 def parse_digits_and_shifre(data):
     digits = []
@@ -52,48 +97,32 @@ def parse_digits_and_shifre(data):
 def decode_digits(entry):
     counter = 0
     string = ''
+    wires = {}
 
-    real_digit = len(set(entry))
+    real_digit = len(entry)
 
     if real_digit == 2:
         string += '1'
-        counter += 1
-    elif real_digit == 3:
+        counter += 1    
+        wires['right_upper'] = entry[0]
+        wires['right_lower'] = entry[1]
+    if real_digit == 3:
         string += '7'
         counter += 1
-    elif real_digit == 4:
+        wires['upper'] = entry[0]
+    if real_digit == 4:
         string += '4'
         counter += 1
-    elif real_digit == 7:
+        wires['left_upper'] = entry[0]
+        wires['middle'] = entry[2]
+    if real_digit == 7:
         string += '8'
         counter += 1
-
-    return counter, string
-
-def decode_complicated_digits(entry):
-    entry = sorted(entry)
-    string =''
-    two = 'dafgc'
-    three = 'dafbc'
-    five = 'defbc'
-    six = 'defbcg'
-    nine = 'defabc'
-    zero = 'dabcge'
-
-    if entry == sorted(two):
-        string += '2'
-    if entry == sorted(three):
-        string += '3'
-    if entry == sorted(five):
-        string += '5'
-    if entry == sorted(six):
-        string += '6'
-    if entry == sorted(nine):
-        string += '9'
-    if entry == sorted(zero):
-        string += '0'
-
-    return string
+        wires['left_lower'] = entry[1]
+        # wires['upper'] = entry[3]
+        wires['lower'] = entry[0]
+  
+    return counter, string, wires
 
 
 def solve(day):
