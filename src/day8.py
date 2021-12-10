@@ -109,18 +109,18 @@ def decode_digits(entry):
     if real_digit == 3:
         string += '7'
         counter += 1
-        wires['upper'] = entry[0]
+        wires['upper'] = entry[0] # incorrect
     if real_digit == 4:
         string += '4'
         counter += 1
-        wires['left_upper'] = entry[0]
-        wires['middle'] = entry[2]
+        wires['left_upper'] = entry[0] # incorrect
+        wires['middle'] = entry[2] # incorrect
     if real_digit == 7:
         string += '8'
         counter += 1
-        wires['left_lower'] = entry[1]
+        wires['left_lower'] = entry[1] # incorrect
         # wires['upper'] = entry[3]
-        wires['lower'] = entry[0]
+        wires['lower'] = entry[0] # incorrect
   
     return counter, string, wires
 
