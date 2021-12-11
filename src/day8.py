@@ -5,6 +5,7 @@ Full description: https://adventofcode.com/2021/day/8
 import pathlib
 import sys
 
+
 def parse(day):
     """Parse input"""
     with open(f"src/inputs/day{day}_input.txt", "r") as f:

@@ -32,7 +32,6 @@ def part1(data):
         else:
             total_sum += check_heat_zones_standard(lines)
 
-
     return total_sum
 
 
@@ -53,6 +52,7 @@ def check_heat_zones_first(lines):
 
     return sum(nums)
 
+
 def check_heat_zones_last(lines):
     nums = []
     rng = len(lines[1])-1
@@ -68,6 +68,7 @@ def check_heat_zones_last(lines):
             if lines[1][num_pos] < lines[1][num_pos-1] and lines[1][num_pos] < lines[1][num_pos+1] and lines[1][num_pos] < lines[0][num_pos]:
                 nums.append(current)
     return sum(nums)
+
 
 def check_heat_zones_standard(lines):
     nums = []
@@ -88,7 +89,6 @@ def check_heat_zones_standard(lines):
 
 def part2(data):
     """Solve part 2"""
-
 
 
 def solve(day):
