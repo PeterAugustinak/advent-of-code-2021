@@ -2,8 +2,6 @@
 ADVENT OF CODE DAY - TRANSPARENT ORIGAMI
 Full description: https://adventofcode.com/2021/day/13
 """
-import pathlib
-import sys
 
 
 # TEMPLATED FUNCTIONS
@@ -15,19 +13,8 @@ def parse(day):
 
 def part1(data):
     """Solve part 1"""
- 
     paper = draw_paper(data)
     fold_instructions = get_fold_instructions(data)
- 
-    # folds = data[-12:]
-    # first_fold = folds[0]
-
-    # paper = [
-    #     ['.', '#', '.'],
-    #     ['.', '.', '#'],
-    #     ['#', '#', '.']
-    # ]
-
     folded_paper = get_folded_paper(paper, [fold_instructions[0]])
 
     total_dots = count_dots(folded_paper)
@@ -37,21 +24,17 @@ def part2(data):
     """Solve part 2"""
     paper = draw_paper(data)
     fold_instructions = get_fold_instructions(data)
-
-
-    # paper = [
-    #     ['.', '#', '.'],
-    #     ['.', '.', '#'],
-    #     ['.', '.', '.'],
-    #     ['.', '.', '.'],
-    #     ['#', '.', '.']
-    # ]
-
     folded_paper = get_folded_paper(paper, fold_instructions)
-    
+
+    make_pretty_code(folded_paper)
+
+def make_pretty_code(folded_paper):
+    """Filter resulted folded paper to better readability of final code."""
     for row in folded_paper:
-         print(row)
- 
+        row = ''.join(row)
+        code = row.replace('.', ' ')
+        print(code)
+
 def solve(day):
     """Solve the puzzle for the given input"""
     data = parse(day)
@@ -64,7 +47,6 @@ def solve(day):
 def draw_paper(data):
     """Creates paper (grid) with # in x and y positions based on instructions"""
     instructions = data[:-13]
-
     instructions = [instruction.split(',') for instruction in instructions]
 
     x_lst = [int(instruction[0]) for instruction in instructions]
@@ -73,9 +55,9 @@ def draw_paper(data):
     paper_right_bottom = (max(x_lst), max(y_lst))
 
     paper = []
-    for row in range(paper_right_bottom[1]+1):
+    for row in range(0, paper_right_bottom[1]+2):
         row = []
-        for _ in range(paper_right_bottom[0]+1):
+        for _ in range(0, paper_right_bottom[0]+1):
             row.append('.')
         paper.append(row)
     
@@ -97,7 +79,7 @@ def get_fold_instructions(data):
 def get_folded_paper(folded_paper, fold_instructions):
     """Recursively takes folded paper and fold it based on instruction"""
 
-    while fold_instructions:
+    if fold_instructions:
         if fold_instructions[0][0] == 'x':
             folded_paper = fold_left_right(folded_paper, fold_instructions[0][1])
 
@@ -132,15 +114,20 @@ def fold_bottom_up(paper, on_position):
     """Folds bottom half of the list to up"""
 
     on_position = int(on_position)
-   
-    folded_paper = []
-    first_half = paper[:on_position]
-    second_half = paper[on_position+1:]
-    second_half = second_half[::-1]
+    paper_len = len(paper)
 
+    if paper_len % 2 == 0:
+        first_half = paper[:on_position]
+        second_half = paper[on_position:]
+
+    else:
+        first_half = paper[:on_position]
+        second_half = paper[on_position+1:]
+   
+    second_half = second_half[::-1]
     folded_paper = first_half
+
     for row_num, row in enumerate(second_half):
-        print(row_num)
         for char_pos, char in enumerate(row):
             if char == '#':
                 folded_paper[row_num][char_pos] = char
@@ -148,6 +135,7 @@ def fold_bottom_up(paper, on_position):
     return folded_paper
 
 def count_dots(folded_paper):
+    """Count all the present dots (#) in current fold."""
     dots = 0
     for row in folded_paper:
         for elem in row:

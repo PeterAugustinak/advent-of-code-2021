@@ -10,5 +10,9 @@ All the exercises are done in Python 3.10
 - Day 5: Hydrothermal Venture
 - Day 6: Lanternfish (Part II. not resolved for MemoryError)
 - Day 7: Treachery of Whales
-- Day 8: Seven Segment Search (Part II. not correct)
+- Day 8: Seven Segment Search
+- Day 9: Smoke Basin (part I. only)
+- Day 10: Syntax Scoring (part I. only)
+- Day 13: Transparent origami
+
 
