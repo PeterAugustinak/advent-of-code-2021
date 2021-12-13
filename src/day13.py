@@ -42,7 +42,7 @@ def part2(data):
     # paper = [
     #     ['.', '#', '.'],
     #     ['.', '.', '#'],
-    #     ['#', '#', '.'],
+    #     ['.', '.', '.'],
     #     ['.', '.', '.'],
     #     ['#', '.', '.']
     # ]
@@ -50,8 +50,7 @@ def part2(data):
     folded_paper = get_folded_paper(paper, fold_instructions)
     
     for row in folded_paper:
-        row_j = '.'.join(row)
-        print(row_j)
+         print(row)
  
 def solve(day):
     """Solve the puzzle for the given input"""
@@ -63,6 +62,7 @@ def solve(day):
 
 # SOLUTION FUNCTIONS
 def draw_paper(data):
+    """Creates paper (grid) with # in x and y positions based on instructions"""
     instructions = data[:-13]
 
     instructions = [instruction.split(',') for instruction in instructions]
@@ -95,12 +95,13 @@ def get_fold_instructions(data):
     return items
     
 def get_folded_paper(folded_paper, fold_instructions):
+    """Recursively takes folded paper and fold it based on instruction"""
 
     while fold_instructions:
         if fold_instructions[0][0] == 'x':
             folded_paper = fold_left_right(folded_paper, fold_instructions[0][1])
 
-        elif fold_instructions[0][0] == 'y':
+        if fold_instructions[0][0] == 'y':
             folded_paper = fold_bottom_up(folded_paper, fold_instructions[0][1])
 
         fold_instructions = fold_instructions[1:]
@@ -131,17 +132,15 @@ def fold_bottom_up(paper, on_position):
     """Folds bottom half of the list to up"""
 
     on_position = int(on_position)
-    # print(paper[on_position])
-    # if '#' in paper[on_position]:
-    #     print('FALSE')
-    
+   
     folded_paper = []
     first_half = paper[:on_position]
     second_half = paper[on_position+1:]
-
+    second_half = second_half[::-1]
 
     folded_paper = first_half
     for row_num, row in enumerate(second_half):
+        print(row_num)
         for char_pos, char in enumerate(row):
             if char == '#':
                 folded_paper[row_num][char_pos] = char
@@ -158,14 +157,7 @@ def count_dots(folded_paper):
     return dots
 
 
-
-
-
-
-
-
 if __name__ == "__main__":
     solutions = solve(13)
     print("\n".join(str(solution) for solution in solutions))
-
-
+    
